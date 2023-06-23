@@ -1,7 +1,13 @@
+
+Full subsystem reset:
+
 podman system reset
+
+Simplified Certifiate generation for server TLS connections:
 
 mysql_ssl_rsa_setup -d /opt/lesson16/cert/
 
+manual cluster startup for tests only, use docker compose instead:
 
 docker run -d \
   -e MYSQL_ROOT_PASSWORD=root \

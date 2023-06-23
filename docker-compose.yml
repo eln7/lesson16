@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  db1:
+    image: percona/percona-xtradb-cluster:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      CLUSTER_NAME: cluster1
+      XTRABACKUP_PASSWORD: my-secret-pw
+    privileged: true
+    volumes:
+      - db1_data:/var/lib/mysql
+      - /opt/lesson16/cert:/cert
+      - /opt/lesson16/config:/etc/percona-xtradb-cluster.conf.d
+    networks:
+      - cluster_net
+
+  db2:
+    image: percona/percona-xtradb-cluster:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      CLUSTER_NAME: cluster1
+      XTRABACKUP_PASSWORD: my-secret-pw
+      CLUSTER_JOIN: db1
+    privileged: true
+    volumes:
+      - db2_data:/var/lib/mysql
+      - /opt/lesson16/cert:/cert
+      - /opt/lesson16/config:/etc/percona-xtradb-cluster.conf.d
+    networks:
+      - cluster_net
+    depends_on:
+      - db1
+
+  db3:
+    image: percona/percona-xtradb-cluster:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      CLUSTER_NAME: cluster1
+      XTRABACKUP_PASSWORD: my-secret-pw
+      CLUSTER_JOIN: db1
+    privileged: true
+    volumes:
+      - db3_data:/var/lib/mysql
+      - /opt/lesson16/cert:/cert
+      - /opt/lesson16/config:/etc/percona-xtradb-cluster.conf.d
+    networks:
+      - cluster_net
+    depends_on:
+      - db1
+      - db2
+
+volumes:
+  db1_data:
+  db2_data:
+  db3_data:
+
+networks:
+  cluster_net:
+    driver: bridge
